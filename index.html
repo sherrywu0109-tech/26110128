@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pen</title>
+  </head>
+  <body>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的網頁程式作品集 | Showcase Portfolio</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    :root {
+      --bg-dark: #0a0c10;
+      --card-bg: rgba(22, 27, 34, 0.65);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-gold: #d4af37;
+      --accent-cyan: #38bdf8;
+      --locked-gray: #334155;
+    }
+
+    body {
+      font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      color: #e2e8f0;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 40%);
+      background-attachment: fixed;
+      min-height: 100vh;
+    }
+
+    .font-cinzel {
+      font-family: 'Cinzel', serif;
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 解鎖卡片的特有微暈特效 */
+    .unlocked-card {
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+    }
+
+    .unlocked-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.08),
+        transparent
+      );
+      transition: 0.6s ease;
+    }
+
+    .unlocked-card:hover::before {
+      left: 100%;
+    }
+
+    .unlocked-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 12px 30px -5px rgba(56, 189, 248, 0.25),
+                  0 0 15px 0 rgba(212, 175, 55, 0.15);
+    }
+
+    .locked-card {
+      background: rgba(15, 23, 42, 0.4);
+      border-color: rgba(255, 255, 255, 0.03);
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+
+    .locked-card:hover {
+      opacity: 0.85;
+      border-color: rgba(239, 68, 68, 0.3);
+      animation: lockShake 0.4s ease-in-out;
+    }
+
+    @keyframes lockShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-4px) rotate(-1deg); }
+      40% { transform: translateX(4px) rotate(1deg); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+    }
+
+    .avatar-glow {
+      position: relative;
+    }
+    .avatar-glow::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan), transparent);
+      z-index: -1;
+      opacity: 0.8;
+      filter: blur(6px);
+      transition: opacity 0.3s ease;
+    }
+    .avatar-glow:hover::after {
+      opacity: 1;
+      filter: blur(10px);
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen justify-between py-12 px-4 sm:px-6 lg:px-8">
+
+  <header class="max-w-4xl mx-auto text-center mb-12 sm:mb-16">
+    <div class="relative inline-block mb-6">
+      <div class="avatar-glow rounded-full p-1">
+        <img 
+          src="https://i.postimg.cc/ZYyQbnNz/IMG-8044.jpg" 
+          alt="大頭貼" 
+          class="w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover shadow-2xl border-2 border-slate-700/80"
+        >
+      </div>
+      <!-- 狀態徽章 -->
+      <span class="absolute bottom-1 right-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xs px-2.5 py-1 rounded-full backdrop-blur-md flex items-center gap-1.5 font-medium">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        第 1-2 關已解鎖
+      </span>
+    </div>
+
+    <h1 class="text-3xl sm:text-5xl font-bold font-cinzel tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-slate-100 via-sky-200 to-slate-400 mb-3">
+      
+    </h1>
+    <p class="text-slate-400 text-sm sm:text-base max-w-lg mx-auto font-light leading-relaxed">
+      探索網頁前端開發的冒險旅程．學習歷程與成果關卡展覽
+    </p>
+
+    <!-- 進度條展示 -->
+    <div class="mt-6 max-w-xs mx-auto">
+      <div class="flex justify-between text-xs text-slate-400 mb-1.5 font-mono">
+        <span>QUEST PROGRESS</span>
+        <span>2 / 16 (12.5%)</span>
+      </div>
+      <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
+        <div class="h-full bg-gradient-to-r from-sky-400 to-amber-300 rounded-full w-[12.5%] transition-all duration-1000"></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto w-full mb-16">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      
+      <!-- Week 1: 已解鎖 -->
+      <a href="w1/index.html" class="glass-card unlocked-card rounded-xl p-5 flex flex-col justify-between group">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-mono px-2.5 py-1 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20 group-hover:bg-sky-500/20 transition-colors">
+              WEEK 01
+            </span>
+            <span class="text-xs text-emerald-400 flex items-center gap-1 font-mono">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> UNLOCKED
+            </span>
+          </div>
+          <h3 class="text-lg font-bold text-slate-100 group-hover:text-sky-300 transition-colors mb-2">
+            數位名片
+          </h3>
+          <p class="text-xs text-slate-400 leading-relaxed line-clamp-2">
+            初識 HTML/CSS 排版，建立兼具現代感與響應式設計的個人個人數位名片。
+          </p>
+        </div>
+        <div class="mt-6 flex items-center justify-between text-xs font-medium text-sky-400/80 group-hover:text-sky-300">
+          <span>進入作品</span>
+          <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </div>
+      </a>
+
+      <!-- Week 2: 已解鎖 -->
+      <a href="w2/index.html" class="glass-card unlocked-card rounded-xl p-5 flex flex-col justify-between group">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-mono px-2.5 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 group-hover:bg-amber-500/20 transition-colors">
+              WEEK 02
+            </span>
+            <span class="text-xs text-emerald-400 flex items-center gap-1 font-mono">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> UNLOCKED
+            </span>
+          </div>
+          <h3 class="text-lg font-bold text-slate-100 group-hover:text-amber-300 transition-colors mb-2">
+            今天吃甚麼？
+          </h3>
+          <p class="text-xs text-slate-400 leading-relaxed line-clamp-2">
+            結合 JavaScript 邏輯與隨機選擇算法，解決每日選擇困難症的美食抽籤器。
+          </p>
+        </div>
+        <div class="mt-6 flex items-center justify-between text-xs font-medium text-amber-400/80 group-hover:text-amber-300">
+          <span>進入作品</span>
+          <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </div>
+      </a>
+
+      <!-- Week 3: 未解鎖 -->
+      <div class="glass-card locked-card rounded-xl p-5 flex flex-col justify-between" title="尚未解鎖">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">WEEK 03</span>
+            <span class="text-base" role="img" aria-label="locked">🔒</span>
+          </div>
+          <h3 class="text-lg font-medium text-slate-500 mb-2">任務載入中...</h3>
+          <p class="text-xs text-slate-600">完成前期關卡後即可解鎖此主題作品。</p>
+        </div>
+        <div class="mt-6 text-xs text-slate-600 font-mono">STATUS: LOCKED</div>
+      </div>
+
+      <!-- Week 4: 未解鎖 -->
+      <div class="glass-card locked-card rounded-xl p-5 flex flex-col justify-between" title="尚未解鎖">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">WEEK 04</span>
+            <span class="text-base" role="img" aria-label="locked">🔒</span>
+          </div>
+          <h3 class="text-lg font-medium text-slate-500 mb-2">任務載入中...</h3>
+          <p class="text-xs text-slate-600">完成前期關卡後即可解鎖此主題作品。</p>
+        </div>
+        <div class="mt-6 text-xs text-slate-600 font-mono">STATUS: LOCKED</div>
+      </div>
+
+      <!-- Week 5: 未解鎖 -->
+      <div class="glass-card locked-card rounded-xl p-5 flex flex-col justify-between" title="尚未解鎖">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">WEEK 05</span>
+            <span class="text-base" role="img" aria-label="locked">🔒</span>
+          </div>
+          <h3 class="text-lg font-medium text-slate-500 mb-2">任務載入中...</h3>
+          <p class="text-xs text-slate-600">完成前期關卡後即可解鎖此主題作品。</p>
+        </div>
+        <div class="mt-6 text-xs text-slate-600 font-mono">STATUS: LOCKED</div>
+      </div>
+
+      <!-- Week 6: 未解鎖 -->
+      <div class="glass-card locked-card rounded-xl p-5 flex flex-col justify-between" title="尚未解鎖">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">WEEK 06</span>
+            <span class="text-base" role="img" aria-label="locked">🔒</span>
+          </div>
+          <h3 class="text-lg font-medium text-slate-500 mb-2">任務載入中...</h3>
+          <p class="text-xs text-slate-600">完成前期關卡後即可解鎖此主題作品。</p>
+        </div>
+        <div class="mt-6 text-xs text-slate-600 font-mono">STATUS: LOCKED</div>
+      </div>
+
+      <!-- Week 7: 未解鎖 -->
+      <div class="glass-card locked-card rounded-xl p-5 flex flex-col justify-between" title="尚未解鎖">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">WEEK 07</span>
+            <span class="text-base" role="img" aria-label="locked">🔒</span>
+          </div>
+          <h3 class="text-lg font-medium text-slate-500 mb-2">任務載入中...</h3>
+          <p class="text-xs text-slate-600">完成前期關卡後即可解鎖此主題作品。</p>
+        </div>
+        <div class="mt-6 text-xs text-slate-600 font-mono">STATUS: LOCKED</div>
+      </div>
+
+      <!-- Week 8: 未解鎖 -->
+      <div class="glass-card locked-card rounded-xl p-5 flex flex-col justify-between" title="尚未解鎖">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">WEEK 08</span>
+            <span class="text-base" role="img" aria-label="locked">🔒</span>
+          </div>
+          <h3 class="text-lg font-medium text-slate-500 mb-2">任務載入中...</h3>
+          <p class="text-xs text-slate-600">完成前期關卡後即可解鎖此主題作品。</p>
+        </div>
+        <div class="mt-6 text-xs text-slate-600 font-mono">STATUS: LOCKED</div>
+      </div>
+
+      <!-- Week 9: 未解鎖 -->
+      <div class="glass-card locked-card rounded-xl p-5 flex flex-col justify-between" title="尚未解鎖">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">WEEK 09</span>
+            <span class="text-base" role="img" aria-label="locked">🔒</span>
+          </div>
+          <h3 class="text-lg font-medium text-slate-500 mb-2">任務載入中...</h3>
+          <p class="text-xs text-slate-600">完成前期關卡後即可解鎖此主題作品。</p>
+        </div>
+        <div class="mt-6 text-xs text-slate-600 font-mono">STATUS: LOCKED</div>
+      </div>
+
+      <!-- Week 10: 未解鎖 -->
+      <div class="glass-card locked-card rounded-xl p-5 flex flex-col justify-between" title="尚未解鎖">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">WEEK 10</span>
+            <span class="text-base" role="img" aria-label="locked">🔒</span>
+          </div>
+          <h3 class="text-lg font-medium text-slate-500 mb-2">任務載入中...</h3>
+          <p class="text-xs text-slate-600">完成前期關卡後即可解鎖此主題作品。</p>
+        </div>
+        <div class="mt-6 text-xs text-slate-600 font-mono">STATUS: LOCKED</div>
+      </div>
+
+      <!-- Week 11: 未解鎖 -->
+      <div class="glass-card locked-card rounded-xl p-5 flex flex-col justify-between" title="尚未解鎖">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">WEEK 11</span>
+            <span class="text-base" role="img" aria-label="locked">🔒</span>
+          </div>
+          <h3 class="text-lg font-medium text-slate-500 mb-2">任務載入中...</h3>
+          <p class="text-xs text-slate-600">完成前期關卡後即可解鎖此主題作品。</p>
+        </div>
+        <div class="mt-6 text-xs text-slate-600 font-mono">STATUS: LOCKED</div>
+      </div>
+
+      <!-- Week 12: 未解鎖 -->
+      <div class="glass-card locked-card rounded-xl p-5 flex flex-col justify-between" title="尚未解鎖">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">WEEK 12</span>
+            <span class="text-base" role="img" aria-label="locked">🔒</span>
+          </div>
+          <h3 class="text-lg font-medium text-slate-500 mb-2">任務載入中...</h3>
+          <p class="text-xs text-slate-600">完成前期關卡後即可解鎖此主題作品。</p>
+        </div>
+        <div class="mt-6 text-xs text-slate-600 font-mono">STATUS: LOCKED</div>
+      </div>
+
+      <!-- Week 13: 未解鎖 -->
+      <div class="glass-card locked-card rounded-xl p-5 flex flex-col justify-between" title="尚未解鎖">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">WEEK 13</span>
+            <span class="text-base" role="img" aria-label="locked">🔒</span>
+          </div>
+          <h3 class="text-lg font-medium text-slate-500 mb-2">任務載入中...</h3>
+          <p class="text-xs text-slate-600">完成前期關卡後即可解鎖此主題作品。</p>
+        </div>
+        <div class="mt-6 text-xs text-slate-600 font-mono">STATUS: LOCKED</div>
+      </div>
+
+      <!-- Week 14: 未解鎖 -->
+      <div class="glass-card locked-card rounded-xl p-5 flex flex-col justify-between" title="尚未解鎖">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">WEEK 14</span>
+            <span class="text-base" role="img" aria-label="locked">🔒</span>
+          </div>
+          <h3 class="text-lg font-medium text-slate-500 mb-2">任務載入中...</h3>
+          <p class="text-xs text-slate-600">完成前期關卡後即可解鎖此主題作品。</p>
+        </div>
+        <div class="mt-6 text-xs text-slate-600 font-mono">STATUS: LOCKED</div>
+      </div>
+
+      <!-- Week 15: 未解鎖 -->
+      <div class="glass-card locked-card rounded-xl p-5 flex flex-col justify-between" title="尚未解鎖">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">WEEK 15</span>
+            <span class="text-base" role="img" aria-label="locked">🔒</span>
+          </div>
+          <h3 class="text-lg font-medium text-slate-500 mb-2">任務載入中...</h3>
+          <p class="text-xs text-slate-600">完成前期關卡後即可解鎖此主題作品。</p>
+        </div>
+        <div class="mt-6 text-xs text-slate-600 font-mono">STATUS: LOCKED</div>
+      </div>
+
+      <!-- Week 16: 未解鎖 (最終關卡) -->
+      <div class="glass-card locked-card rounded-xl p-5 flex flex-col justify-between border-dashed" title="尚未解鎖 - 最終專題">
+        <div>
+          <div class="flex justify-between items-start mb-4">
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-500/60 border border-amber-500/20">FINAL</span>
+            <span class="text-base" role="img" aria-label="locked">🔒</span>
+          </div>
+          <h3 class="text-lg font-medium text-slate-500 mb-2">期末專題發表</h3>
+          <p class="text-xs text-slate-600">解鎖所有基礎關卡後開放終極實務作品展示。</p>
+        </div>
+        <div class="mt-6 text-xs text-amber-500/50 font-mono">FINAL BOSS QUEST</div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="text-center text-xs text-slate-500 border-t border-slate-800/80 pt-6 max-w-4xl mx-auto w-full">
+    <p>© Web Programming Portfolio. Crafted with HTML & CSS.</p>
+  </footer>
+
+</body>
+</html>
