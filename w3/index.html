@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensual Meme Generator | 迷因產生器</title>
+
+    <!-- 引入 Google Fonts: Playfair Display (美式古典性感) 與 Noto Sans TC (繁體中文) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+
+    <!-- 引入 html2canvas 畫布截圖套件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- 引入 FontAwesome 圖示 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* CSS 基礎重置與核心色彩系統 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        :root {
+            --bg-dark: #0a060d;
+            --card-glass: rgba(28, 14, 28, 0.65);
+            --border-glow: rgba(255, 77, 109, 0.35);
+            --accent-rose: #ff4d6d;
+            --accent-crimson: #c9184a;
+            --gold-gradient: linear-gradient(135deg, #ffb703, #fb8500);
+            --sensual-gradient: linear-gradient(135deg, #ff4d6d 0%, #a4133c 50%, #590d22 100%);
+            --text-light: #fff0f5;
+            --text-muted: #b5838d;
+        }
+
+        body {
+            font-family: 'Playfair Display', 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 氛圍霓虹背景光線特效 */
+        .bg-glow-1, .bg-glow-2 {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.45;
+            z-index: -1;
+            animation: pulseGlow 10s ease-in-out infinite alternate;
+        }
+
+        .bg-glow-1 {
+            width: 450px;
+            height: 450px;
+            background: var(--accent-rose);
+            top: -10%;
+            left: -10%;
+        }
+
+        .bg-glow-2 {
+            width: 500px;
+            height: 500px;
+            background: #590d22;
+            bottom: -10%;
+            right: -10%;
+            animation-delay: -5s;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.35; }
+            100% { transform: scale(1.25) translate(40px, -30px); opacity: 0.6; }
+        }
+
+        /* 主容器網格配置 */
+        .main-app {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--card-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glow);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 77, 109, 0.15);
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 30px;
+        }
+
+        /* 控制面板區塊樣式 */
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .header-title {
+            text-align: left;
+            margin-bottom: 5px;
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, #fff, #ff4d6d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .header-title p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .control-label i {
+            color: var(--accent-rose);
+            margin-right: 6px;
+        }
+
+        /* 上傳按鈕造型 */
+        .file-upload-btn {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: rgba(255, 77, 109, 0.12);
+            border: 1px dashed var(--accent-rose);
+            border-radius: 12px;
+            color: var(--text-light);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-btn:hover {
+            background: rgba(255, 77, 109, 0.25);
+            box-shadow: 0 0 15px rgba(255, 77, 109, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .file-upload-btn input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* 輸入框樣式 */
+        .text-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(10, 6, 13, 0.7);
+            border: 1px solid rgba(255, 77, 109, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .text-input:focus {
+            border-color: var(--accent-rose);
+            box-shadow: 0 0 12px rgba(255, 77, 109, 0.5);
+        }
+
+        /* 滑桿造型 */
+        .range-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.15);
+            outline: none;
+        }
+
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--accent-rose);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--accent-rose);
+            transition: transform 0.2s ease;
+        }
+
+        .range-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* 高級感性感按鈕 */
+        .btn-download {
+            margin-top: 10px;
+            padding: 15px 24px;
+            border: none;
+            border-radius: 14px;
+            background: var(--sensual-gradient);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(201, 24, 74, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 77, 109, 0.7);
+            filter: brightness(1.1);
+        }
+
+        .btn-download:active {
+            transform: translateY(0);
+        }
+
+        /* 右側預覽區域 */
+        .preview-arena {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 20px;
+            min-height: 450px;
+            position: relative;
+        }
+
+        /* 可匯出下載的迷因容器 */
+        .meme-box {
+            position: relative;
+            max-width: 100%;
+            display: inline-block;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            background-color: #000;
+        }
+
+        .meme-box img {
+            display: block;
+            max-width: 100%;
+            max-height: 60vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* 迷因文字共通樣式 (厚實黑色輪廓線) */
+        .meme-text {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            text-align: center;
+            color: #ffffff;
+            font-family: 'Impact', 'Noto Sans TC', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 1.2;
+            word-wrap: break-word;
+            pointer-events: none;
+            /* 強效黑色文字陰影輪廓 (可確保任何背景底圖都能讀取文字) */
+            text-shadow: 
+                3px 3px 0 #000, -3px -3px 0 #000, 
+                3px -3px 0 #000, -3px 3px 0 #000,
+                0px 3px 0 #000, 0px -3px 0 #000, 
+                3px 0px 0 #000, -3px 0px 0 #000,
+                0 0 15px rgba(0,0,0,0.9);
+        }
+
+        .meme-text.top {
+            top: 5%;
+        }
+
+        .meme-text.bottom {
+            bottom: 5%;
+        }
+
+        /* RWD 響應式佈局調適 */
+        @media (max-width: 900px) {
+            .main-app {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            .header-title h1 {
+                font-size: 1.5rem;
+            }
+
+            .preview-arena {
+                min-height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 氛圍背景圓影 -->
+    <div class="bg-glow-1"></div>
+    <div class="bg-glow-2"></div>
+
+    <!-- 主程式容器 -->
+    <main class="main-app">
+        <!-- 左側：控制面板 -->
+        <section class="control-panel">
+            <div class="header-title">
+                <h1>SENSUAL MEME</h1>
+                <p>自定義迷因產生器 • 慾望風格</p>
+            </div>
+
+            <!-- 1. 圖片上傳區塊 -->
+            <div class="control-group">
+                <label class="control-label">
+                    <span><i class="fa-solid fa-image"></i> 選擇迷因底圖</span>
+                </label>
+                <div class="file-upload-btn">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span id="upload-filename">上傳本機圖片...</span>
+                    <!-- 檔案選擇器：限制只能選擇圖片類型 -->
+                    <input type="file" id="image-input" accept="image/*">
+                </div>
+            </div>
+
+            <!-- 2. 上方文字輸入框 -->
+            <div class="control-group">
+                <label class="control-label" for="top-text-input">
+                    <span><i class="fa-solid fa-align-center"></i> 上方文字</span>
+                </label>
+                <input type="text" id="top-text-input" class="text-input" placeholder="在這裡輸入上方文字..." value="當你看到這個網站時">
+            </div>
+
+            <!-- 3. 下方文字輸入框 -->
+            <div class="control-group">
+                <label class="control-label" for="bottom-text-input">
+                    <span><i class="fa-solid fa-align-center"></i> 下方文字</span>
+                </label>
+                <input type="text" id="bottom-text-input" class="text-input" placeholder="在這裡輸入下方文字..." value="就已經被吸引了">
+            </div>
+
+            <!-- 4. 字體大小滑桿 -->
+            <div class="control-group">
+                <label class="control-label">
+                    <span><i class="fa-solid fa-text-height"></i> 字體大小</span>
+                    <span id="font-size-val">36px</span>
+                </label>
+                <input type="range" id="font-size-slider" class="range-slider" min="16" max="72" value="36">
+            </div>
+
+            <!-- 5. 上方文字位置滑桿 -->
+            <div class="control-group">
+                <label class="control-label">
+                    <span><i class="fa-solid fa-arrows-up-down"></i> 上方文字垂直位置</span>
+                    <span id="top-pos-val">5%</span>
+                </label>
+                <input type="range" id="top-pos-slider" class="range-slider" min="0" max="45" value="5">
+            </div>
+
+            <!-- 6. 下方文字位置滑桿 -->
+            <div class="control-group">
+                <label class="control-label">
+                    <span><i class="fa-solid fa-arrows-up-down"></i> 下方文字垂直位置</span>
+                    <span id="bottom-pos-val">5%</span>
+                </label>
+                <input type="range" id="bottom-pos-slider" class="range-slider" min="0" max="45" value="5">
+            </div>
+
+            <!-- 一鍵下載按鈕 -->
+            <button id="download-btn" class="btn-download">
+                <i class="fa-solid fa-download"></i> 下載迷因圖檔 (PNG)
+            </button>
+        </section>
+
+        <!-- 右側：即時預覽區 -->
+        <section class="preview-arena">
+            <!-- 包含圖片與文字的迷因輸出區塊 (html2canvas 將對此區域進行截圖) -->
+            <div id="meme-container" class="meme-box">
+                <img id="meme-image" src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800&auto=format&fit=crop" alt="迷因底圖" crossorigin="anonymous">
+                <div id="meme-top-text" class="meme-text top">當你看到這個網站時</div>
+                <div id="meme-bottom-text" class="meme-text bottom">就已經被吸引了</div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // ==========================================
+        // 1. 取得 DOM 元素 reference (元素控制)
+        // ==========================================
+        const imageInput = document.getElementById('image-input');
+        const uploadFilename = document.getElementById('upload-filename');
+        const memeImage = document.getElementById('meme-image');
+        const memeContainer = document.getElementById('meme-container');
+
+        const topTextInput = document.getElementById('top-text-input');
+        const bottomTextInput = document.getElementById('bottom-text-input');
+        const memeTopText = document.getElementById('meme-top-text');
+        const memeBottomText = document.getElementById('meme-bottom-text');
+
+        const fontSizeSlider = document.getElementById('font-size-slider');
+        const fontSizeVal = document.getElementById('font-size-val');
+
+        const topPosSlider = document.getElementById('top-pos-slider');
+        const topPosVal = document.getElementById('top-pos-val');
+
+        const bottomPosSlider = document.getElementById('bottom-pos-slider');
+        const bottomPosVal = document.getElementById('bottom-pos-val');
+
+        const downloadBtn = document.getElementById('download-btn');
+
+        // ==========================================
+        // 2. 本機圖片上傳與預覽 (使用 FileReader API 避免 CORS 跨域問題)
+        // ==========================================
+        imageInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                // 更新按鈕顯示的檔名
+                uploadFilename.textContent = file.name;
+
+                // 創建 FileReader 物件讀取檔案
+                const reader = new FileReader();
+
+                // 當圖片讀取完畢時執行的回呼函式
+                reader.onload = function (event) {
+                    // 將讀取的 Data URL 賦值給 <img> 的 src 屬性
+                    memeImage.src = event.target.result;
+                };
+
+                // 以 Base64 DataURL 格式讀取圖檔
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ==========================================
+        // 3. 文字內容即時同步 (Input Event Listeners)
+        // ==========================================
+        topTextInput.addEventListener('input', function () {
+            memeTopText.textContent = this.value;
+        });
+
+        bottomTextInput.addEventListener('input', function () {
+            memeBottomText.textContent = this.value;
+        });
+
+        // ==========================================
+        // 4. 滑桿即時微調控制 (Font-size & Position)
+        // ==========================================
+        // 調整字體大小
+        fontSizeSlider.addEventListener('input', function () {
+            const size = `${this.value}px`;
+            memeTopText.style.fontSize = size;
+            memeBottomText.style.fontSize = size;
+            fontSizeVal.textContent = size;
+        });
+
+        // 調整上方文字垂直位置
+        topPosSlider.addEventListener('input', function () {
+            const pos = `${this.value}%`;
+            memeTopText.style.top = pos;
+            topPosVal.textContent = pos;
+        });
+
+        // 調整下方文字垂直位置
+        bottomPosSlider.addEventListener('input', function () {
+            const pos = `${this.value}%`;
+            memeBottomText.style.bottom = pos;
+            bottomPosVal.textContent = pos;
+        });
+
+        // 初始化預設字體大小與位置
+        memeTopText.style.fontSize = `${fontSizeSlider.value}px`;
+        memeBottomText.style.fontSize = `${fontSizeSlider.value}px`;
+
+        // ==========================================
+        // 5. 使用 html2canvas 一鍵導出與下載迷因
+        // ==========================================
+        downloadBtn.addEventListener('click', function () {
+            // 變更按鈕狀態給予使用者良好反饋
+            const originalBtnHTML = downloadBtn.innerHTML;
+            downloadBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 處理圖檔中...';
+            downloadBtn.style.opacity = '0.7';
+
+            // 使用 html2canvas 渲染預覽區塊
+            html2canvas(memeContainer, {
+                useCORS: true,       // 允許跨域圖片 (對範例圖片有效)
+                scale: 2,            // 提高渲染解析度 (2倍高畫質)
+                backgroundColor: null // 保持透明度背景
+            }).then(canvas => {
+                // 將 canvas 轉為 PNG DataURL
+                const imageUrl = canvas.toDataURL('image/png');
+
+                // 創建隱藏的 <a> 標籤進行下載
+                const link = document.createElement('a');
+                link.download = 'my-meme.png';
+                link.href = imageUrl;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // 恢復按鈕狀態
+                downloadBtn.innerHTML = originalBtnHTML;
+                downloadBtn.style.opacity = '1';
+            }).catch(err => {
+                console.error("生成迷因失敗：", err);
+                alert("圖片下載失敗，若使用網路圖片請改為上傳本機圖片再試試看！");
+                downloadBtn.innerHTML = originalBtnHTML;
+                downloadBtn.style.opacity = '1';
+            });
+        });
+    </script>
+</body>
+</html>
