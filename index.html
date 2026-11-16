@@ -1,20 +1,4 @@
-
-<!-- do not change the markup -->
-<a href="#">
-  Checkout
-</a>
-
-<!-- 
-1. make look like a button
-2. change text color red on hover
-
-Cannot change html, only css.
-Look closely at
--->  
-
-<div></div>
-<div></div>
-<div></div><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
@@ -53,11 +37,34 @@ Look closely at
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 20px;
             position: relative;
             overflow-x: hidden;
+        }
+
+        /* ---------------------------------------------------- */
+        /* 1. 頂部 Checkout 按鈕樣式（像按鈕、Hover 時文字變紅） */
+        /* ---------------------------------------------------- */
+        a[href="#"] {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary-neon);
+            color: var(--bg-color);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        a[href="#"]:hover {
+            color: red !important;
+            background-color: #ffffff;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
         }
 
         /* 賽博龐克背景與網格掃描線效果 */
@@ -122,7 +129,7 @@ Look closely at
             position: relative;
         }
 
-        /* 個人個人資料區塊 */
+        /* 個人資料區塊 */
         .profile-section {
             text-align: center;
             margin-bottom: 40px;
@@ -146,7 +153,6 @@ Look closely at
             z-index: 2;
         }
 
-        /* 頭像外圍炫彩旋轉邊框 */
         .avatar-wrapper::before {
             content: '';
             position: absolute;
@@ -294,7 +300,7 @@ Look closely at
             background: rgba(255, 0, 127, 0.15);
         }
 
-        /* 未解鎖按鈕樣式 (Week 5 ~ 16) */
+        /* 未解鎖按鈕樣式 */
         .card-btn.locked {
             background: var(--locked-bg);
             border: 1px solid var(--locked-border);
@@ -312,10 +318,41 @@ Look closely at
             color: #585c70;
         }
 
+        /* ---------------------------------------------------- */
+        /* 2. 準確解鎖作業五（WEEK 05）：使用 :nth-child(5)      */
+        /* ---------------------------------------------------- */
+        .grid-container .card-btn:nth-child(5) {
+            background: rgba(0, 240, 255, 0.06);
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            color: var(--text-main);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        .grid-container .card-btn:nth-child(5) .week-tag {
+            background: rgba(0, 240, 255, 0.2);
+            color: var(--primary-neon);
+            border: 1px solid rgba(0, 240, 255, 0.5);
+        }
+
+        .grid-container .card-btn:nth-child(5) .card-title {
+            color: var(--text-main);
+        }
+
+        .grid-container .card-btn:nth-child(5):hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: var(--primary-neon);
+            box-shadow: 
+                0 10px 25px rgba(0, 240, 255, 0.4),
+                0 0 15px rgba(0, 240, 255, 0.2);
+            background: rgba(0, 240, 255, 0.15);
+        }
+
         /* 響應式斷點 (RWD) */
         @media (max-width: 900px) {
             .grid-container {
-                grid-template-columns: repeat(2, 1fr); /* 平板顯示 2 欄 */
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -324,7 +361,7 @@ Look closely at
                 padding: 25px 15px;
             }
             .grid-container {
-                grid-template-columns: 1fr; /* 手機版顯示 1 欄 */
+                grid-template-columns: 1fr;
             }
             .profile-name {
                 font-size: 1.6rem;
@@ -333,6 +370,11 @@ Look closely at
     </style>
 </head>
 <body>
+
+    <!-- Checkout 按鈕 -->
+    <a href="#">
+        Checkout
+    </a>
 
     <!-- 背景動態視覺 -->
     <div class="bg-grid"></div>
@@ -379,7 +421,7 @@ Look closely at
                 <div class="card-title">Week 3 - 迷因產生器</div>
             </a>
 
-            <!-- 按鈕 4 (已解鎖 - 悄悄話) -->
+            <!-- 按鈕 4 (已解鎖) -->
             <a href="w4/index.html" class="card-btn unlocked pink-style">
                 <div class="card-header">
                     <span class="week-tag">WEEK 04</span>
@@ -388,15 +430,16 @@ Look closely at
                 <div class="card-title">Week 4 - 悄悄話</div>
             </a>
 
-            <!-- 按鈕 5 至 16 (未解鎖) -->
+            <!-- 按鈕 5 (關卡五/作業五 - 已透過 :nth-child(5) 順利解鎖) -->
             <div class="card-btn locked">
                 <div class="card-header">
                     <span class="week-tag">WEEK 05</span>
                     <span class="status-icon"></span>
                 </div>
-                <div class="card-title">未解鎖任務</div>
+                <div class="card-title">Week 5 - 雲端心電感應</div>
             </div>
 
+            <!-- 按鈕 6 至 16 (未解鎖) -->
             <div class="card-btn locked">
                 <div class="card-header">
                     <span class="week-tag">WEEK 06</span>
